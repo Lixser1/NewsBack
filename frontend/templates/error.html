@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Ошибка — СтудНовости{% endblock %}
+
+{% block content %}
+<section class="empty">
+  <h1 class="page-title">Что-то пошло не так</h1>
+  <p>{{ message }}</p>
+  <a class="btn btn--primary" href="{{ url_for('news.list_news') }}">К списку новостей</a>
+</section>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Новости — СтудНовости{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1 class="page-title">Новости</h1>
+    <p class="page-subtitle">Всего публикаций: {{ items|length }}</p>
+  </div>
+  <a class="btn btn--primary" href="{{ url_for('news.create') }}">+ Новая новость</a>
+</div>
+
+{% if items %}
+  <div class="news-grid">
+    {% for item in items %}
+      <article class="news-card">
+        <div class="news-card__meta">
+          <span class="role-badge role-badge--{{ item.author_role }}">{{ item.author_role_display }}</span>
+          <time class="muted" datetime="{{ item.created_at }}">{{ item.created_at|newsdate }}</time>
+        </div>
+
+        <h2 class="news-card__title">
+          <a href="{{ url_for('news.detail', news_id=item.id) }}">{{ item.title }}</a>
+        </h2>
+
+        <p class="news-card__excerpt">{{ item.body|truncate(170, true, '…') }}</p>
+
+        <a class="link" href="{{ url_for('news.detail', news_id=item.id) }}">Читать →</a>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty">
+    <p>Пока нет ни одной новости.</p>
+    <a class="btn btn--primary" href="{{ url_for('news.create') }}">Создать первую</a>
+  </div>
+{% endif %}
+{% endblock %}

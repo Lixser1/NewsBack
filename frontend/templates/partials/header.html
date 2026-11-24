@@ -1,0 +1,27 @@
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="{{ url_for('index') }}">
+      <span class="brand__mark">СН</span>
+      <span>СтудНовости</span>
+    </a>
+
+    <nav class="nav">
+      <a class="nav__link" href="{{ url_for('news.list_news') }}">Новости</a>
+      {% if current_role %}
+        <a class="btn btn--primary btn--sm" href="{{ url_for('news.create') }}">+ Новая новость</a>
+      {% endif %}
+    </nav>
+
+    <div class="session">
+      {% if current_role %}
+        {% if current_username %}
+          <span class="session__user">{{ current_username }}</span>
+        {% endif %}
+        <span class="role-badge role-badge--{{ current_role }}">{{ role_labels[current_role] }}</span>
+        <form method="post" action="{{ url_for('auth.logout') }}" class="inline-form">
+          <button type="submit" class="btn btn--ghost btn--sm">Выйти</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</header>

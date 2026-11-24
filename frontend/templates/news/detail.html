@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ item.title }} — СтудНовости{% endblock %}
+
+{% block content %}
+<article class="news-detail">
+  <div class="news-detail__meta">
+    <span class="role-badge role-badge--{{ item.author_role }}">{{ item.author_role_display }}</span>
+    <span class="muted">Опубликовано {{ item.created_at|newsdate }}</span>
+    {% if item.updated_at != item.created_at %}
+      <span class="muted">· изменено {{ item.updated_at|newsdate }}</span>
+    {% endif %}
+  </div>
+
+  <h1 class="page-title">{{ item.title }}</h1>
+  <div class="news-detail__body">{{ item.body }}</div>
+
+  <div class="actions">
+    <a class="btn" href="{{ url_for('news.list_news') }}">← К списку</a>
+    <a class="btn btn--primary" href="{{ url_for('news.edit', news_id=item.id) }}">Изменить</a>
+    <form method="post" action="{{ url_for('news.delete', news_id=item.id) }}"
+          onsubmit="return confirm('Удалить эту новость?');">
+      <button type="submit" class="btn btn--danger">Удалить</button>
+    </form>
+  </div>
+</article>
+{% endblock %}

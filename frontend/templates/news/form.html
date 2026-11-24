@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% set is_create = mode == "create" %}
+
+{% block title %}{{ 'Новая новость' if is_create else 'Редактирование новости' }} — СтудНовости{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h1 class="page-title">{{ 'Новая новость' if is_create else 'Редактирование новости' }}</h1>
+</div>
+
+{% if message %}
+  <ul class="form-errors">
+    <li>{{ message }}</li>
+  </ul>
+{% endif %}
+
+<form method="post" class="form"
+      action="{{ url_for('news.create') if is_create else url_for('news.edit', news_id=news_id) }}">
+  <label class="field">
+    <span class="field__label">Заголовок</span>
+    <input class="field__input" type="text" name="title" maxlength="200" required
+           value="{{ form.title }}"
+           {% if errors.get('title') %}aria-invalid="true"{% endif %}>
+    {% for error in errors.get('title', []) %}
+      <span class="field__error">{{ error }}</span>
+    {% endfor %}
+  </label>
+
+  <label class="field">
+    <span class="field__label">Текст новости</span>
+    <textarea class="field__input field__input--area" name="body" rows="10" required
+              {% if errors.get('body') %}aria-invalid="true"{% endif %}>{{ form.body }}</textarea>
+    {% for error in errors.get('body', []) %}
+      <span class="field__error">{{ error }}</span>
+    {% endfor %}
+  </label>
+
+  <p class="field__hint">
+    Публикуется от имени роли: <strong>{{ role_labels[current_role] }}</strong>
+  </p>
+
+  <div class="actions">
+    <a class="btn"
+       href="{{ url_for('news.list_news') if is_create else url_for('news.detail', news_id=news_id) }}">Отмена</a>
+    <button type="submit" class="btn btn--primary">
+      {{ 'Опубликовать' if is_create else 'Сохранить' }}
+    </button>
+  </div>
+</form>
+{% endblock %}

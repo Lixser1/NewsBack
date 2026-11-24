@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Вход — СтудНовости{% endblock %}
+
+{% block content %}
+<section class="login">
+  <h1 class="page-title">Вход</h1>
+  <p class="page-subtitle">
+    Введите логин и пароль. Если аккаунта ещё нет —
+    <a href="{{ url_for('auth.register', next=next_url) }}">зарегистрируйтесь</a>.
+  </p>
+
+  <form method="post" action="{{ url_for('auth.login') }}" class="login__form">
+    <input type="hidden" name="next" value="{{ next_url }}">
+
+    <label class="field">
+      <span class="field__label">Логин</span>
+      <input class="field__input" type="text" name="username" required autofocus
+             autocomplete="username" value="{{ username }}">
+    </label>
+
+    <label class="field">
+      <span class="field__label">Пароль</span>
+      <input class="field__input" type="password" name="password" required
+             autocomplete="current-password">
+    </label>
+
+    <button type="submit" class="btn btn--primary btn--block">Войти</button>
+  </form>
+</section>
+{% endblock %}

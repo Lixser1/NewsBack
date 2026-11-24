@@ -1,0 +1,43 @@
+services:
+  backend:
+    build: ./backend
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-dev-insecure-secret-key}
+      DJANGO_DEBUG: "0"
+      DJANGO_ALLOWED_HOSTS: "*"
+      DJANGO_TIME_ZONE: Asia/Bishkek
+      SQLITE_PATH: /app/data/db.sqlite3
+      TZ: Asia/Bishkek
+    volumes:
+      - sqlite_data:/app/data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - |
+          import sys, urllib.request
+          try:
+              with urllib.request.urlopen("http://127.0.0.1:8000/api/health/", timeout=3) as response:
+                  sys.exit(0 if response.status == 200 else 1)
+          except Exception:
+              sys.exit(1)
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  frontend:
+    build: ./frontend
+    environment:
+      FLASK_SECRET_KEY: ${FLASK_SECRET_KEY:-dev-flask-secret-key}
+      API_BASE_URL: http://backend:8000
+      TZ: Asia/Bishkek
+    ports:
+      - "${FRONTEND_PORT:-5000}:5000"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  sqlite_data:

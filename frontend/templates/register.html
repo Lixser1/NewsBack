@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация — СтудНовости{% endblock %}
+
+{% block content %}
+<section class="login">
+  <h1 class="page-title">Регистрация</h1>
+  <p class="page-subtitle">
+    Создайте аккаунт и выберите роль. Уже есть аккаунт —
+    <a href="{{ url_for('auth.login', next=next_url) }}">войдите</a>.
+  </p>
+
+  {% if message %}
+    <ul class="form-errors">
+      <li>{{ message }}</li>
+    </ul>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('auth.register') }}" class="login__form">
+    <input type="hidden" name="next" value="{{ next_url }}">
+
+    <label class="field">
+      <span class="field__label">Логин</span>
+      <input class="field__input" type="text" name="username" maxlength="150" required
+             autocomplete="username" value="{{ form.username }}"
+             {% if errors.get('username') %}aria-invalid="true"{% endif %}>
+      {% for error in errors.get('username', []) %}
+        <span class="field__error">{{ error }}</span>
+      {% endfor %}
+    </label>
+
+    <label class="field">
+      <span class="field__label">Email <span class="muted">(необязательно)</span></span>
+      <input class="field__input" type="email" name="email" autocomplete="email"
+             value="{{ form.email }}"
+             {% if errors.get('email') %}aria-invalid="true"{% endif %}>
+      {% for error in errors.get('email', []) %}
+        <span class="field__error">{{ error }}</span>
+      {% endfor %}
+    </label>
+
+    <label class="field">
+      <span class="field__label">Пароль</span>
+      <input class="field__input" type="password" name="password" minlength="8" required
+             autocomplete="new-password"
+             {% if errors.get('password') %}aria-invalid="true"{% endif %}>
+      {% for error in errors.get('password', []) %}
+        <span class="field__error">{{ error }}</span>
+      {% endfor %}
+    </label>
+
+    <label class="field">
+      <span class="field__label">Повторите пароль</span>
+      <input class="field__input" type="password" name="password_confirm" minlength="8" required
+             autocomplete="new-password"
+             {% if errors.get('password_confirm') %}aria-invalid="true"{% endif %}>
+      {% for error in errors.get('password_confirm', []) %}
+        <span class="field__error">{{ error }}</span>
+      {% endfor %}
+    </label>
+
+    <div class="field">
+      <span class="field__label">Роль</span>
+      <div class="role-cards">
+        <label class="role-card">
+          <input type="radio" name="role" value="teacher"
+                 {% if form.role == 'teacher' %}checked{% endif %} required>
+          <span class="role-card__icon">🎓</span>
+          <span class="role-card__title">Преподаватель</span>
+          <span class="role-card__hint">Объявления и учебные материалы</span>
+        </label>
+
+        <label class="role-card">
+          <input type="radio" name="role" value="student"
+                 {% if form.role == 'student' %}checked{% endif %} required>
+          <span class="role-card__icon">📚</span>
+          <span class="role-card__title">Студент</span>
+          <span class="role-card__hint">Новости группы и совместная учёба</span>
+        </label>
+      </div>
+      {% for error in errors.get('role', []) %}
+        <span class="field__error">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn--primary btn--block">Создать аккаунт</button>
+  </form>
+</section>
+{% endblock %}
